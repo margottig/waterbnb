@@ -77,7 +77,7 @@ public class MainController {
 	public String search(@RequestParam(value = "address") String address, Model viewModel, HttpSession sesion) {
 		Long userLog = (Long) sesion.getAttribute("userId");
 		if (address.equals("")) {
-			if (userLog == null) {
+			if (userLog == null) { //redirect attribute
 				return "searchForm.jsp";
 			}
 			UserModel user = userServ.findById(userLog);
@@ -90,7 +90,7 @@ public class MainController {
 			return "searchForm.jsp";
 		}
 		UserModel user = userServ.findById(userLog);
-		List<PiscinaModel> piscinas = piscinaServ.findByAddress(address);
+		List<PiscinaModel> piscinas = piscinaServ.findByAddress(address); // Custom Query o contains
 		viewModel.addAttribute("piscinas", piscinas);
 		viewModel.addAttribute("user", user);
 		return "searchForm.jsp";
@@ -114,6 +114,8 @@ public class MainController {
 	@GetMapping("/new/comment/{idPool}")
 	public String newComForm(@ModelAttribute("newComment") ComentarioModel newComment, Model viewModel,
 			@PathVariable("idPool") Long id) {
+		// agregar validacion para evitar que host agregue reviews a sus piscinas
+		// Omitir boton/enlace desde jsp para agregar review
 		viewModel.addAttribute("piscina", piscinaServ.findById(id));
 		return "newComment.jsp";
 	}
@@ -131,6 +133,9 @@ public class MainController {
 		UserModel user = userServ.findById(userLog);
 		PiscinaModel piscina = piscinaServ.findById(idPool);
 		
+		//llamar a un custom query que haga el prodemidio de los ratings/comentarios de una piscina
+		// update del registro de la piscina en el campo rating
+		
 		comServ.addComentario(user, piscina, newComment.getComentario(), newComment.getRating());
 		return "redirect:/pools/"+idPool;
 	}
@@ -147,4 +152,6 @@ public class MainController {
 //////		viewModel.addAttribute("piscina", piscinaServ.findById(idPool));
 //		return "newComment.jsp";
 //	}
+	
+	// GET Y POST PARA EDICION DE PISCINA DEL HOST!
 }
