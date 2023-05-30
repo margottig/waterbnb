@@ -23,8 +23,9 @@
 			<div class="col-2">
 				<p>current listings</p>
 			</div>
-			<div class="col-1">
-				<a href="/logout">logout</a>
+			<div class="col-2">
+				<a href="/search" class="text-dark">search</a> |
+				<a href="/logout" class="text-dark">logout</a>
 			</div>
 		</div>
 		<div class="row">

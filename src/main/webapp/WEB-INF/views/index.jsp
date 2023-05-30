@@ -23,6 +23,7 @@
 			<div class="col text-end">
 				<c:choose>
 					<c:when test="${user!=null}">
+					<a href="/host/dashboard" class="text-dark">new Pool</a> |
 						<a href="/logout" class="text-dark">logout</a>
 					</c:when>
 					<c:otherwise>

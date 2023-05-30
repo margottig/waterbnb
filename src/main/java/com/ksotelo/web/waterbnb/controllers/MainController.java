@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ksotelo.web.waterbnb.models.ComentarioModel;
 import com.ksotelo.web.waterbnb.models.PiscinaModel;
 import com.ksotelo.web.waterbnb.models.UserModel;
+import com.ksotelo.web.waterbnb.services.ComentarioService;
 import com.ksotelo.web.waterbnb.services.PiscinaService;
 import com.ksotelo.web.waterbnb.services.UserService;
 
@@ -26,6 +28,8 @@ public class MainController {
 	private UserService userServ;
 	@Autowired
 	private PiscinaService piscinaServ;
+	@Autowired
+	private ComentarioService comServ;
 
 	@GetMapping("/")
 	public String index(HttpSession sesion, Model viewModel) {
@@ -66,10 +70,11 @@ public class MainController {
 		}
 		UserModel user = userServ.findById(userLog);
 		viewModel.addAttribute("user", user);
-		return"searchForm.jsp";
+		return "searchForm.jsp";
 	}
+
 	@PostMapping("/search")
-	public String search(@RequestParam("address") String address, Model viewModel, HttpSession sesion) {
+	public String search(@RequestParam(value = "address") String address, Model viewModel, HttpSession sesion) {
 		Long userLog = (Long) sesion.getAttribute("userId");
 		if (address.equals("")) {
 			if (userLog == null) {
@@ -90,19 +95,56 @@ public class MainController {
 		viewModel.addAttribute("user", user);
 		return "searchForm.jsp";
 	}
-	
+
 	@GetMapping("/pools/{idPool}")
 	public String findPool(@PathVariable("idPool") Long idPool, Model viewModel, HttpSession sesion) {
-		Long userLog = (Long)sesion.getAttribute("userId");
+		Long userLog = (Long) sesion.getAttribute("userId");
 		if (userLog == null) {
 			PiscinaModel pool = piscinaServ.findById(idPool);
-			viewModel.addAttribute("piscina",pool);
-			return"showPiscina.jsp";
+			viewModel.addAttribute("piscina", pool);
+			return "showPiscina.jsp";
 		}
 		UserModel user = userServ.findById(userLog);
 		PiscinaModel pool = piscinaServ.findById(idPool);
-		viewModel.addAttribute("piscina",pool);
+		viewModel.addAttribute("piscina", pool);
 		viewModel.addAttribute("user", user);
-		return"showPiscina.jsp";
+		return "showPiscina.jsp";
 	}
+
+	@GetMapping("/new/comment/{idPool}")
+	public String newComForm(@ModelAttribute("newComment") ComentarioModel newComment, Model viewModel,
+			@PathVariable("idPool") Long id) {
+		viewModel.addAttribute("piscina", piscinaServ.findById(id));
+		return "newComment.jsp";
+	}
+
+	@PostMapping("/new/comment/{idPool}")
+	public String newCom(@Valid @ModelAttribute("newComment") ComentarioModel newComment, BindingResult result,
+			@PathVariable("idPool") Long idPool, HttpSession sesion) {
+		Long userLog = (Long) sesion.getAttribute("userId");
+		if (userLog == null) {
+			return "redirect:/guest/signin";
+		}
+		if (result.hasErrors())
+			return "newComment.jsp";
+		
+		UserModel user = userServ.findById(userLog);
+		PiscinaModel piscina = piscinaServ.findById(idPool);
+		
+		comServ.addComentario(user, piscina, newComment.getComentario(), newComment.getRating());
+		return "redirect:/pools/"+idPool;
+	}
+//	@PostMapping("/new/comment/{idPool}")
+//	public String newComForm(@Valid @ModelAttribute("newComment") ComentarioModel newComment,
+//			@PathVariable("idPool") Long id, BindingResult result, Model viewModel, HttpSession sesion) {
+//		Long userLog = (Long) sesion.getAttribute("userId");
+		
+//		if (result.hasErrors()) {
+//			return "newComment.jsp";
+//		}
+//
+////
+//////		viewModel.addAttribute("piscina", piscinaServ.findById(idPool));
+//		return "newComment.jsp";
+//	}
 }

@@ -10,7 +10,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>inserta un título aquí</title>
+<title>WaterBnB</title>
 
 <!-- for Bootstrap CSS -->
 <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css" />
@@ -35,16 +35,54 @@
 		</div>
 		<div class="row">
 			<div class="col">
-				<p><c:out value="${piscina.address}"></c:out></p>
-				<p><c:out value="${piscina.description}"></c:out></p>
-				
+				<p>
+					<c:out value="${piscina.address}"></c:out>
+				</p>
+				<p>
+					<c:out value="${piscina.description}"></c:out>
+				</p>
+
 			</div>
 			<div class="col">
-				<p>email: <c:out value="${piscina.owner.email}"></c:out></p>
-				<p>name: <c:out value="${piscina.owner.firstName} ${piscina.owner.lastName}"></c:out></p>
-				<p>pool size: <c:out value="${piscina.poolSize}"></c:out></p>
-				<p>cost: $<c:out value="${piscina.cost}"></c:out></p>
+				<p>
+					email:
+					<c:out value="${piscina.owner.email}"></c:out>
+				</p>
+				<p>
+					name:
+					<c:out value="${piscina.owner.firstName} ${piscina.owner.lastName}"></c:out>
+				</p>
+				<p>
+					pool size:
+					<c:out value="${piscina.poolSize}"></c:out>
+				</p>
+				<p>
+					cost: $
+					<c:out value="${piscina.cost}"></c:out>
+				</p>
 			</div>
+		</div>
+		<div class="row justify-content-between">
+			<div class="col-1">
+				<p>reviews(${piscina.rating}/5)</p>
+			</div>
+			<div class="col-2">
+				<a href="/new/comment/${piscina.id}" class="text-dark">leave a
+					review</a>
+			</div>
+		</div>
+		<div class="row border">
+			<c:forEach items="${piscina.comentarios}" var="comentario">
+				<div class="col-12">
+					<p>
+						<c:out value="${comentario.autor.firstName}"></c:out>
+						<c:out value="${comentario.autor.lastName}"></c:out>
+					</p>
+					<p>Rating: <c:out value="${comentario.rating}"></c:out></p>
+					<p><c:out value="${comentario.comentario}"></c:out></p>
+				</div>
+				<hr>
+			</c:forEach>
 		</div>
 	</div>
 </body>

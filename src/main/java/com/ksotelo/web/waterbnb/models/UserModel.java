@@ -26,7 +26,6 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "users")
 public class UserModel {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -42,14 +41,11 @@ public class UserModel {
 	@Email(message = "email no válido")
 	@NotBlank(message = "campo email no puede estar vacío")
 	private String email;
-	
+
 	@NotNull
-    @Min(value=1, message="debe seleccionar un rol")
+	@Min(value = 1, message = "debe seleccionar un rol")
 	private Integer role;
 
-	@OneToMany(mappedBy="owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<PiscinaModel> piscinas;
-	
 	@NotBlank(message = "por favor ingresa una contraseña")
 	@Size(min = 8, max = 64, message = "password debe tener entre 8 y 20 caracteres")
 	private String password;
@@ -64,6 +60,12 @@ public class UserModel {
 	private Date createdAt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date updatedAt;
+
+	@OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<PiscinaModel> piscinas;
+
+	@OneToMany(mappedBy = "autor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<ComentarioModel> comentarios;
 
 	@PrePersist
 	protected void onCreate() {
@@ -139,7 +141,6 @@ public class UserModel {
 		this.updatedAt = updatedAt;
 	}
 
-	
 	public Integer getRole() {
 		return role;
 	}
@@ -147,6 +148,7 @@ public class UserModel {
 	public void setRole(Integer role) {
 		this.role = role;
 	}
+
 	public List<PiscinaModel> getPiscinas() {
 		return piscinas;
 	}
@@ -154,6 +156,16 @@ public class UserModel {
 	public void setPiscinas(List<PiscinaModel> piscinas) {
 		this.piscinas = piscinas;
 	}
+
+	
+	public List<ComentarioModel> getComentarios() {
+		return comentarios;
+	}
+
+	public void setComentarios(List<ComentarioModel> comentarios) {
+		this.comentarios = comentarios;
+	}
+
 	public UserModel() {
 
 	}

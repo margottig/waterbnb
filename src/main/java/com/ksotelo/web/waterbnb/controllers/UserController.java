@@ -38,7 +38,7 @@ public class UserController {
 		if(userRegistrado!=null) {
 			UserModel u = userServ.findByEmail(newUser.getEmail());
 			sesion.setAttribute("userId", u.getId());
-			return "redirect:/search";
+			return "redirect:/";
 		}
 		viewModel.addAttribute("login", new UserModel());
 		return "logreg.jsp";
