@@ -49,6 +49,11 @@ public class MainController {
 			return "redirect:/guest/signin";
 		}
 		UserModel usuario = userServ.findById(userLog);
+		
+		// comprobar si el rol del usuario es guest. De ser el caso, redirigir hacia /search
+		if(usuario.getRole().equals(2)) {
+			return "redirect:/search";
+		}
 		viewModel.addAttribute("user", usuario);
 		return "/host/dashboard.jsp";
 	}
@@ -137,6 +142,9 @@ public class MainController {
 		// update del registro de la piscina en el campo rating
 		
 		comServ.addComentario(user, piscina, newComment.getComentario(), newComment.getRating());
+		// seteamos el rating de piscina
+		piscina.setRating(piscinaServ.obtenerPromedioRatings(idPool));
+		piscinaServ.actualizarPiscina(piscina); //actualizamos el registro de piscina
 		return "redirect:/pools/"+idPool;
 	}
 //	@PostMapping("/new/comment/{idPool}")

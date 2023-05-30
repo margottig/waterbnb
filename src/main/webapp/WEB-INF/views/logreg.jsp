@@ -81,6 +81,7 @@
 							<form:select path="role" class="form-select">
 								<form:option value="0">select</form:option>
 								<form:option value="1">host</form:option>
+								<form:option value="2">guest</form:option>
 							</form:select>
 						</div>
 					</div>

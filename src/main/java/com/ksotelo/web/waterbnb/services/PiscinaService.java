@@ -23,4 +23,14 @@ public class PiscinaService {
 	public PiscinaModel findById(Long id) {
 		return piscinaRepo.findById(id).orElse(null);
 	}
+	
+	public Double obtenerPromedioRatings(Long id) {
+		return piscinaRepo.obtenerPromedioRatings(id).orElse(0.0);
+	}
+	
+	public PiscinaModel actualizarPiscina(PiscinaModel newPiscina) {
+		return piscinaRepo.save(newPiscina);
+	}
+	
+	
 }

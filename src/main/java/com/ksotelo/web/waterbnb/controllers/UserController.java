@@ -38,6 +38,10 @@ public class UserController {
 		if(userRegistrado!=null) {
 			UserModel u = userServ.findByEmail(newUser.getEmail());
 			sesion.setAttribute("userId", u.getId());
+			// comprobar si el rol del usuario es host. De ser el caso, redirigir hacia /host/dashboard
+			if(u.getRole().equals(1)) {
+				return "redirect:/host/dashboard";
+			}
 			return "redirect:/";
 		}
 		viewModel.addAttribute("login", new UserModel());
